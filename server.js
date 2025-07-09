@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const articleRoutes = require('./routes/article'); // Make sure this path is correct
-
+const articleRoutes = require('./routes/article');
+const casierRoutes = require('./routes/casier');
 const app = express();
 
 // Middleware to parse JSON bodies
@@ -15,6 +15,9 @@ mongoose.connect('mongodb://127.0.0.1:27017/textile_db'
 
 // Use article routes for /articles
 app.use('/articles', articleRoutes);
+
+// Use casier routes for /casiers
+app.use('/casiers', casierRoutes);
 
 // Basic root route
 app.get('/', (req, res) => {

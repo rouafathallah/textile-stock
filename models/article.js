@@ -1,10 +1,6 @@
 const mongoose = require('mongoose');
 
 const articleSchema = mongoose.Schema({
-    id:{
-        type:Number,
-        required:true
-    },
     code_barre:{
         type:String,
         required:true,
@@ -16,7 +12,8 @@ const articleSchema = mongoose.Schema({
     },
     stock:{
         type:Number,
-        required:false
+        required:false,
+        min:0
     }
 });
 const Article = mongoose.model('article',articleSchema); //compile le schema vers un modele

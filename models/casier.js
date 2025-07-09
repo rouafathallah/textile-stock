@@ -1,20 +1,33 @@
-const mongoose = require('mongoose');
+const { Schema, model } = require('mongoose');
 
-const casierSchema = mongoose.Schema({
-    id:{
-        type:Number,
-        required:true
-    },
-    ligne:{
-        type:Number,
-        required:true
-    },
-    colonne:{
-        type:Number,
-        required:true
-    }
-});
-const Casier = mongoose.model('casier',casierSchema); //compile le schema vers un modele
+const casierSchema = new Schema({
+  ligne: {
+    type: Number,
+    required: function() { return this.isTemp === null; },
+    default: null
+  },
+  colonne: {
+    type: Number,
+    required: function() { return this.isTemp === null; },
+    default: null
+  },
+  article: {
+    type: Schema.Types.ObjectId,
+    ref: 'Article',
+    required: false,
+    default: null
+  },
+  quantite: {
+    type: Number,
+    required: true,
+    min: 0,
+    default: 0
+  },
+  isTemp: {
+    type: String,
+    enum: ['IN', 'OUT', null],
+    default: null
+  }
+}, { timestamps: true });
 
-module.exports = Casier 
-
+module.exports = model('Casier', casierSchema);

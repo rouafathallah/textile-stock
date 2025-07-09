@@ -3,25 +3,25 @@ const router = express.Router();
 const Article = require('../models/article'); 
 
 // POST route to create a new article
-router.post('/add', async (req, res) => { 
+// POST /casiers/add  → ajouter un nouveau casier
+router.post('/add', async (req, res) => {
   try {
-    const { id, code_barre, nom, stock } = req.body;
+    const { code_barre,nom,stock } = req.body;
 
-    // Create a new Article instance
+    // Crée une nouvelle instance de Casier
     const newArticle = new Article({
-      id,
       code_barre,
       nom,
       stock
     });
 
-    // Save it to the database
+    // Enregistre-la dans la base
     const savedArticle = await newArticle.save();
 
-    // Return success response
+    // Réponse 201 Created avec le casier sauvegardé
     res.status(201).json(savedArticle);
   } catch (error) {
-    // Handle errors (e.g., validation errors, duplicate code_barre)
+    // Ex. : champs manquants, id en double, etc.
     res.status(400).json({ message: error.message });
   }
 });
@@ -56,5 +56,26 @@ router.put('/update/:id', async (req, res) => {
   }
 });
 
+//delete an article
+router.delete('/delete/:id', async (req, res) =>{
+  try{
+    const id=Number(req.params.id); //convertir en nombre
+    const deleteArticle = await Article.findOneAndDelete({id});
+    if (!deleteArticle) {
+      return res.status(404).json({ message: 'Article non trouvé' });
+    }
+     // Tu peux renvoyer l’objet supprimé ou juste un message
+    res.json({
+      message: `Article ${id} supprimé avec succès`,
+      deleteArticle
+    });
+  }catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
+
+
+
+//je veux trier les articles par ordre de nom,codebarre,,,,,,
 module.exports = router;
