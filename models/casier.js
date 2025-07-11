@@ -1,33 +1,22 @@
 const { Schema, model } = require('mongoose');
 
 const casierSchema = new Schema({
-  ligne: {
-    type: Number,
-    required: function() { return this.isTemp === null; },
-    default: null
-  },
-  colonne: {
-    type: Number,
-    required: function() { return this.isTemp === null; },
-    default: null
-  },
-  article: {
-    type: Schema.Types.ObjectId,
-    ref: 'Article',
-    required: false,
-    default: null
-  },
-  quantite: {
-    type: Number,
-    required: true,
-    min: 0,
-    default: 0
-  },
-  isTemp: {
+  code_rayon:  { type: String, required: true },
+  code_etage:  { type: String, required: true },
+  code_casier: { type: String, required: true },
+  code_unique:{ type: String, unique: true }, // exemple : "010101"
+
+  contenus: [{
+    echantillon: { type: Schema.Types.ObjectId, ref: 'Echantillon', required: true },
+    quantite:    { type: Number, required: true, min: 0 }
+  }],
+
+  type: {
     type: String,
-    enum: ['IN', 'OUT', null],
-    default: null
+    enum: ['STK', 'DST'], // STK = casier normal, DST = casier de déstockage
+    required: true
   }
 }, { timestamps: true });
+
 
 module.exports = model('Casier', casierSchema);

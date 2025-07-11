@@ -2,27 +2,35 @@ const express = require('express');
 const router = express.Router();
 const Article = require('../models/article'); 
 
-// POST route to create a new article
-// POST /casiers/add  → ajouter un nouveau casier
+// POST /articles/add
 router.post('/add', async (req, res) => {
   try {
-    const { code_barre,nom,stock } = req.body;
+    const { code_article, libelle } = req.body;
 
-    // Crée une nouvelle instance de Casier
-    const newArticle = new Article({
-      code_barre,
-      nom,
-      stock
-    });
+    if (!code_article || !libelle) {
+      return res.status(400).json({ message: 'code_article et libelle sont requis.' });
+    }
 
-    // Enregistre-la dans la base
+    // Vérifier si un article avec ce code existe déjà
+    const existingArticle = await Article.findOne({ code_article });
+    if (existingArticle) {
+      return res.status(409).json({
+        message: `L'article avec le code ${code_article} existe déjà.`,
+        article: existingArticle
+      });
+    }
+
+    // Créer l’article
+    const newArticle = new Article({ code_article, libelle });
     const savedArticle = await newArticle.save();
 
-    // Réponse 201 Created avec le casier sauvegardé
-    res.status(201).json(savedArticle);
+    res.status(201).json({
+      message: 'Article créé avec succès.',
+      article: savedArticle
+    });
+
   } catch (error) {
-    // Ex. : champs manquants, id en double, etc.
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: 'Erreur serveur', error: error.message });
   }
 });
 
@@ -30,52 +38,47 @@ router.post('/add', async (req, res) => {
 router.get('/getall', async (req, res) => {
   try {
     const articles = await Article.find();
-    res.json(articles);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(200).json(articles);
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur serveur', error: error.message });
   }
 });
 
-// PUT  /articles/update/:id      -> met à jour l'article dont id = :id
-router.put('/update/:id', async (req, res) => {
+//GET ARTICLE BY CODE ARTICLE
+router.get('/:code_article', async (req, res) => {
   try {
-    const id = Number(req.params.id);           // ← conversion
-    const updatedArticle = await Article.findOneAndUpdate(
-      { id },                                   // critère numérique
-      req.body,
-      { new: true, runValidators: true }
-    );
+    const { code_article } = req.params;
+    const article = await Article.findOne({ code_article });
 
-    if (!updatedArticle) {
+    if (!article) {
       return res.status(404).json({ message: 'Article non trouvé' });
     }
 
-    res.json(updatedArticle);
+    res.status(200).json(article);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).json({ message: 'Erreur serveur', error: error.message });
   }
 });
+
 
 //delete an article
-router.delete('/delete/:id', async (req, res) =>{
-  try{
-    const id=Number(req.params.id); //convertir en nombre
-    const deleteArticle = await Article.findOneAndDelete({id});
-    if (!deleteArticle) {
+router.delete('/delete/:code_article', async (req, res) => {
+  try {
+    const { code_article } = req.params;
+    const deleted = await Article.findOneAndDelete({ code_article });
+
+    if (!deleted) {
       return res.status(404).json({ message: 'Article non trouvé' });
     }
-     // Tu peux renvoyer l’objet supprimé ou juste un message
-    res.json({
-      message: `Article ${id} supprimé avec succès`,
-      deleteArticle
+
+    res.status(200).json({
+      message: `Article ${code_article} supprimé avec succès.`,
+      article: deleted
     });
-  }catch (error) {
-    res.status(500).json({ message: error.message });
+  } catch (error) {
+    res.status(500).json({ message: 'Erreur serveur', error: error.message });
   }
 });
 
 
-
-
-//je veux trier les articles par ordre de nom,codebarre,,,,,,
 module.exports = router;

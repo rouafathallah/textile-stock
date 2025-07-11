@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const articleRoutes = require('./routes/article');
 const casierRoutes = require('./routes/casier');
+const echantillonRoutes=require('./routes/echantillon');
 const app = express();
 
 // Middleware to parse JSON bodies
@@ -18,6 +19,8 @@ app.use('/articles', articleRoutes);
 
 // Use casier routes for /casiers
 app.use('/casiers', casierRoutes);
+
+app.use('/echantillons',echantillonRoutes);
 
 // Basic root route
 app.get('/', (req, res) => {
