@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Ajouter un échantillon depuis un article</title>
+  <script src="https://unpkg.com/html5-qrcode"></script>
+</head>
+<body>
+  <h2>📦 Scanner QR Code Article</h2>
+
+  <div id="reader" style="width:300px;"></div>
+  <p id="result">En attente de scan...</p>
+
+  <form id="echantillonForm" style="display:none;">
+    <p>✅ Article détecté : <span id="articleInfo"></span></p>
+
+    <label>Quantité : 
+      <input type="number" id="quantite" required>
+    </label><br><br>
+
+    <label>Code unique du casier : 
+      <input type="text" id="code_unique" required placeholder="ex: 010101">
+    </label><br><br>
+
+    <button type="submit">Créer & Stocker</button>
+  </form>
+
+  <script>
+    const scanner = new Html5Qrcode("reader");
+
+    let qrText = "";
+
+    function onScanSuccess(decodedText) {
+      qrText = decodedText;
+      document.getElementById("result").innerText = "QR Code détecté : " + decodedText;
+      document.getElementById("articleInfo").innerText = decodedText;
+      document.getElementById("echantillonForm").style.display = "block";
+      scanner.stop();
+    }
+
+    scanner.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: 250 },
+      onScanSuccess
+    );
+
+    document.getElementById("echantillonForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const quantite = parseInt(document.getElementById("quantite").value);
+      const code_unique = document.getElementById("code_unique").value;
+
+      try {
+        const response = await fetch("http://localhost:5000/echantillons/from-article", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            qrText,
+            quantite,
+            code_unique
+          })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alert("✅ Échantillon ajouté : " + data.echantillon.nom);
+        } else {
+          alert("❌ Erreur : " + data.message);
+        }
+
+      } catch (err) {
+        alert("Erreur réseau : " + err.message);
+      }
+    });
+  </script>
+</body>
+</html>

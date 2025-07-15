@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const QRCode = require('qrcode');
 const Article = require('../models/article'); 
 
-// POST /articles/add
+// ✅ CREATE new article with QR code and qrCodeText
 router.post('/add', async (req, res) => {
   try {
     const { code_article, libelle } = req.body;
@@ -11,7 +12,6 @@ router.post('/add', async (req, res) => {
       return res.status(400).json({ message: 'code_article et libelle sont requis.' });
     }
 
-    // Vérifier si un article avec ce code existe déjà
     const existingArticle = await Article.findOne({ code_article });
     if (existingArticle) {
       return res.status(409).json({
@@ -20,12 +20,24 @@ router.post('/add', async (req, res) => {
       });
     }
 
-    // Créer l’article
-    const newArticle = new Article({ code_article, libelle });
+    // ✅ Générer le texte QR à stocker
+    const qrCodeText = `${libelle}-${code_article}`; // Ex: "Tissu coton-ART001"
+
+    // ✅ Générer l'image QR code en base64
+    const qrCodeBase64 = await QRCode.toDataURL(qrCodeText);
+
+    // ✅ Créer et enregistrer l’article avec le texte + image QR
+    const newArticle = new Article({
+      code_article,
+      libelle,
+      qrCodeText,      // <== Nouveau champ important
+      qrCode: qrCodeBase64
+    });
+
     const savedArticle = await newArticle.save();
 
     res.status(201).json({
-      message: 'Article créé avec succès.',
+      message: '✅ Article créé avec QR code.',
       article: savedArticle
     });
 
@@ -34,7 +46,7 @@ router.post('/add', async (req, res) => {
   }
 });
 
-// GET route to get all articles
+// ✅ GET all articles
 router.get('/getall', async (req, res) => {
   try {
     const articles = await Article.find();
@@ -44,7 +56,7 @@ router.get('/getall', async (req, res) => {
   }
 });
 
-//GET ARTICLE BY CODE ARTICLE
+// ✅ GET article by code_article
 router.get('/:code_article', async (req, res) => {
   try {
     const { code_article } = req.params;
@@ -60,8 +72,7 @@ router.get('/:code_article', async (req, res) => {
   }
 });
 
-
-//delete an article
+// ✅ DELETE article by code_article
 router.delete('/delete/:code_article', async (req, res) => {
   try {
     const { code_article } = req.params;
@@ -79,6 +90,5 @@ router.delete('/delete/:code_article', async (req, res) => {
     res.status(500).json({ message: 'Erreur serveur', error: error.message });
   }
 });
-
 
 module.exports = router;

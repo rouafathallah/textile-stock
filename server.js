@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors'); 
 const articleRoutes = require('./routes/article');
 const casierRoutes = require('./routes/casier');
 const echantillonRoutes=require('./routes/echantillon');
@@ -32,3 +33,7 @@ const PORT = 5000;
 app.listen(PORT, () => {
   console.log(`Serveur en marche sur le port ${PORT}`);
 });
+
+app.use(express.static('public'));
+app.use(cors());
+

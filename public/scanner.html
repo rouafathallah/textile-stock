@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Scanner un QR Code</title>
+  <script src="https://unpkg.com/html5-qrcode"></script>
+</head>
+<body>
+  <h2>Scanner un QR Code d’échantillon</h2>
+  <div id="reader" style="width:300px;"></div>
+  <p id="result"></p>
+
+  <form id="stockForm" style="display:none;">
+    <p>Nom détecté : <span id="nom"></span></p>
+    <label>Quantité : <input type="number" id="quantite" required min="1" /></label><br /><br />
+    <label>Code casier : <input type="text" id="code_casier" required /></label><br /><br />
+    <button type="submit">Stocker</button>
+  </form>
+
+  <script>
+    const scanner = new Html5Qrcode("reader");
+
+    function onScanSuccess(decodedText, decodedResult) {
+      scanner.stop();
+      document.getElementById("result").innerText = "QR détecté : " + decodedText;
+      document.getElementById("nom").innerText = decodedText;
+      document.getElementById("stockForm").style.display = "block";
+      sessionStorage.setItem("qrText", decodedText);
+    }
+
+    scanner.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: 250 },
+      onScanSuccess
+    );
+
+    document.getElementById("stockForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const qrText = sessionStorage.getItem("qrText");
+      const quantite = parseInt(document.getElementById("quantite").value);
+      const code_casier = document.getElementById("code_casier").value;
+
+      try {
+        const response = await fetch("http://localhost:5000/echantillons/from-article", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ qrText, quantite, code_unique: code_casier }),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          alert("✅ " + data.message);
+        } else {
+          alert("❌ Erreur : " + data.message);
+        }
+      } catch (err) {
+        alert("❌ Erreur stockage : " + err.message);
+      }
+    });
+  </script>
+</body>
+</html>
