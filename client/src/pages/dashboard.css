@@ -1,0 +1,178 @@
+/* Container */
+.dashboard-container {
+  padding: 24px;
+  min-height: 100vh;
+  background-color: #f7f8fc;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  position: relative;
+}
+
+/* Floating star menu */
+.floating-menu {
+  position: fixed;
+  top: 20%;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+}
+
+.floating-menu-btn {
+  background-color: #4b3b94;
+  color: white;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(75, 59, 148, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  user-select: none;
+}
+
+.floating-menu-btn:hover,
+.floating-menu-btn:focus {
+  background-color: #372c6c;
+  outline: none;
+  transform: scale(1.1);
+}
+
+/* Dropdown */
+.floating-menu-dropdown {
+  margin-top: 8px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  width: 180px;
+  display: flex;
+  flex-direction: column;
+  user-select: none;
+}
+
+.floating-menu-dropdown button {
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 12px 16px;
+  width: 100%;
+  cursor: pointer;
+  font-weight: 600;
+  color: #4b3b94;
+  transition: background-color 0.25s ease;
+}
+
+.floating-menu-dropdown button:hover,
+.floating-menu-dropdown button:focus {
+  background-color: #ede9ff;
+  outline: none;
+}
+
+/* Dashboard card */
+.dashboard-card {
+  max-width: 900px;
+  margin: auto;
+  background-color: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgb(75 59 148 / 0.2);
+}
+
+/* Titles */
+.dashboard-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #4b3b94;
+  margin-bottom: 20px;
+}
+
+.dashboard-subtitle {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 15px;
+  color: #3a356d;
+}
+
+/* Search */
+.dashboard-search {
+  margin-bottom: 25px;
+}
+
+.dashboard-search-input {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1.5px solid #b5a8d5;
+  transition: border-color 0.3s ease;
+}
+
+.dashboard-search-input:focus {
+  border-color: #4b3b94;
+  outline: none;
+}
+
+/* Casier cards container */
+.dashboard-casiers-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill,minmax(220px,1fr));
+  gap: 16px;
+}
+
+/* Single casier card */
+.dashboard-casier-card {
+  background-color: #f0f0ff;
+  border-radius: 10px;
+  padding: 15px 20px;
+  box-shadow: 0 6px 15px rgba(75, 59, 148, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: box-shadow 0.3s ease;
+  cursor: default;
+}
+
+.dashboard-casier-card:hover {
+  box-shadow: 0 10px 25px rgba(75, 59, 148, 0.2);
+}
+
+.dashboard-casier-code {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #3a356d;
+}
+
+.dashboard-casier-espace {
+  font-size: 0.95rem;
+  color: #6a6a85;
+}
+
+.dashboard-casier-type {
+  font-weight: 600;
+  font-size: 0.9rem;
+  width: fit-content;
+  padding: 6px 12px;
+  border-radius: 9999px;
+  user-select: none;
+}
+
+.type-in {
+  background-color: #d4f5d5;
+  color: #2a7a2a;
+}
+
+.type-out {
+  background-color: #f8d7da;
+  color: #a12b2b;
+}
+
+/* No results text */
+.dashboard-no-results {
+  color: #999;
+  font-style: italic;
+  text-align: center;
+  grid-column: 1/-1;
+  padding: 20px 0;
+}

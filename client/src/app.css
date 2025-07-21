@@ -1,0 +1,16 @@
+/* App.css or index.css */
+body, html, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.App {
+  min-height: 100vh;
+  background-color: #f7f8fc;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.page-content {
+  padding-top: 80px; /* Match navbar height */
+}

@@ -1,0 +1,136 @@
+/* Login Page Styles */
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(120deg, #f0f4ff, #e8eaf6);
+  font-family: 'Segoe UI', sans-serif;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.login-form {
+  background: white;
+  padding: 40px 35px 45px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.login-title {
+  margin-bottom: 10px;
+  font-size: 1.8rem;
+  color: #211C84;
+  font-weight: 700;
+}
+
+.login-subtitle {
+  font-size: 0.95rem;
+  margin-bottom: 25px;
+  color: #555;
+  font-weight: 500;
+}
+
+.login-error {
+  color: crimson;
+  margin-bottom: 15px;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+/* Email Input */
+.login-input {
+  width: 90%;
+  padding: 12px 18px;
+  margin-bottom: 18px;
+  border: 1.8px solid #ddd;
+  border-radius: 10px;
+  font-size: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  font-weight: 500;
+}
+
+.login-input:focus {
+  border-color: #4D55CC;
+  box-shadow: 0 0 6px rgba(77, 85, 204, 0.6);
+  outline: none;
+}
+
+/* Password input wrapper */
+.login-password-input {
+  position: relative;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+/* Password input itself */
+.login-password-input input {
+  width: 83%;
+  padding: 12px 42px 12px 18px; /* space for icon on right */
+  border: 1.8px solid #ddd;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-password-input input:focus {
+  border-color: #4D55CC;
+  box-shadow: 0 0 6px rgba(77, 85, 204, 0.6);
+  outline: none;
+}
+
+/* Toggle icon styles */
+.toggle-password-icon {
+  position: absolute;
+  top: 50%;
+  right: 14px;
+  transform: translateY(-50%);
+  font-size: 1.3rem;
+  color: #7a73d1;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.3s ease;
+}
+
+.toggle-password-icon:hover {
+  color: #211C84;
+}
+
+.login-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #4D55CC;
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 1rem;
+}
+
+.login-button:hover {
+  background-color: #211C84;
+}
+
+.login-footer {
+  margin-top: 20px;
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.login-link {
+  color: #4D55CC;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.login-link:hover {
+  color: #211C84;
+}

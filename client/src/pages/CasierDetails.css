@@ -1,0 +1,72 @@
+.casier-detail-container {
+  max-width: 700px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 12px;
+  box-shadow: 0 8px 25px rgba(75, 59, 148, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #3a356d;
+}
+
+.back-button {
+  background: transparent;
+  border: none;
+  color: #4b3b94;
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 20px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.back-button:hover {
+  color: #7266f0;
+}
+
+h1 {
+  font-size: 2rem;
+  margin-bottom: 25px;
+  font-weight: 700;
+  color: #3a356d;
+}
+
+.casier-info p {
+  font-size: 1.1rem;
+  margin: 10px 0;
+  line-height: 1.4;
+}
+
+h2 {
+  margin-top: 40px;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: #4b3b94;
+  font-weight: 600;
+  border-bottom: 2px solid #7266f0;
+  padding-bottom: 6px;
+}
+
+.echantillons-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.echantillon-item {
+  background: #f0f0ff;
+  margin-bottom: 14px;
+  padding: 14px 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(75, 59, 148, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.echantillon-item:hover {
+  box-shadow: 0 6px 18px rgba(75, 59, 148, 0.2);
+}
+
+.echantillon-item p {
+  margin: 5px 0;
+  font-size: 1rem;
+  color: #333366;
+}
