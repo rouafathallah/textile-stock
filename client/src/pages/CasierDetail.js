@@ -62,8 +62,8 @@ const CasierDetail = () => {
           {casier.contenus.map((contenu, index) => (
             <li key={contenu._id || index} className="echantillon-item">
               <p><strong>Nom échantillon:</strong> {contenu.echantillon?.nom || 'N/A'}</p>
-              <p><strong>Article associé:</strong> {contenu.echantillon?.article?.nom || 'N/A'}</p>
-              {/* Add other info you want here */}
+              <p><strong>Code article:</strong> {contenu.echantillon?.article?.code_article || 'N/A'}</p>
+              <p><strong>Quantité:</strong> {contenu.quantite}</p>
             </li>
           ))}
         </ul>

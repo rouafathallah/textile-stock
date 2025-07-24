@@ -143,7 +143,9 @@ const Dashboard = () => {
 >
   <div className="dashboard-casier-code">{casier.code_unique}</div>
   <div className="dashboard-casier-espace">
-    Espace: {casier.contenus?.length || 0} / {MAX_SLOTS}
+    Espace: {Array.isArray(casier.contenus)
+      ? casier.contenus.reduce((sum, item) => sum + (item.quantite || 0), 0)
+      : 0} / {MAX_SLOTS}
   </div>
   <div
     className={

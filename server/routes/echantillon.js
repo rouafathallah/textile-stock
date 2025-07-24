@@ -3,6 +3,7 @@ const router = express.Router();
 const Echantillon = require('../models/echantillon');
 const Article = require('../models/article');
 const Casier = require('../models/casier');
+const { authMiddleware } = require('../middleware/auth');
 
 
 // ✅ POST /stock : Stocker un échantillon
@@ -125,6 +126,73 @@ router.post('/destock', async (req, res) => {
 
   } catch (err) {
     console.error('Erreur DESTOCKAGE:', err);
+    res.status(500).json({ message: 'Erreur serveur', error: err.message });
+  }
+});
+
+// ✅ GET /echantillons/getall : Liste des échantillons
+router.get('/getall', authMiddleware, async (req, res) => {
+  try {
+    const echantillons = await Echantillon.find().populate('article');
+    res.status(200).json(echantillons);
+  } catch (err) {
+    res.status(500).json({ message: 'Erreur lors de la récupération des échantillons', error: err.message });
+  }
+});
+
+// ✅ POST /stock-by-code : Stocker un échantillon par code_article
+router.post('/stock-by-code', async (req, res) => {
+  try {
+    const { code_article, quantite, code_unique } = req.body;
+
+    if (!code_article || !quantite || !code_unique) {
+      return res.status(400).json({ message: 'code_article, quantite et code_unique sont requis.' });
+    }
+
+    const quantiteNumber = parseInt(quantite, 10);
+    if (isNaN(quantiteNumber) || quantiteNumber <= 0) {
+      return res.status(400).json({ message: 'Quantité invalide.' });
+    }
+
+    // Trouver l'article par code_article
+    const article = await Article.findOne({ code_article });
+    if (!article) {
+      return res.status(404).json({ message: `Article non trouvé pour : ${code_article}` });
+    }
+
+    const casier = await Casier.findOne({ code_unique });
+    if (!casier) {
+      return res.status(404).json({ message: 'Casier non trouvé.' });
+    }
+
+    // Vérifier capacité du casier
+    const totalContenu = casier.contenus.reduce((sum, item) => sum + item.quantite, 0);
+    if (totalContenu + quantiteNumber > 30) {
+      return res.status(400).json({ message: 'Capacité maximale du casier atteinte (30).' });
+    }
+
+    // Créer l'échantillon lié à l'article
+    const echantillon = await Echantillon.create({
+      nom: article.libelle,
+      article: article._id
+    });
+
+    // Ajouter au casier
+    casier.contenus.push({
+      echantillon: echantillon._id,
+      quantite: quantiteNumber
+    });
+
+    await casier.save();
+
+    res.status(201).json({
+      message: '✅ Échantillon stocké avec succès (par code article).',
+      echantillon,
+      casier: casier.code_unique
+    });
+
+  } catch (err) {
+    console.error('Erreur STOCKAGE CODE:', err);
     res.status(500).json({ message: 'Erreur serveur', error: err.message });
   }
 });

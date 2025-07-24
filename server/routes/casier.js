@@ -118,12 +118,16 @@ router.post('/vider/:code_unique', authMiddleware, adminOnly, async (req, res) =
 
 router.get('/get', authMiddleware, async (req, res) => {
   try {
-    const casiers = await Casier.find().sort({ code_unique: 1 }).select('code_unique type');
+    const casiers = await Casier.find()
+      .sort({ code_unique: 1 })
+      .select('code_unique type contenus');
+
     res.status(200).json(casiers);
   } catch (err) {
     res.status(500).json({ message: 'Erreur serveur.', error: err.message });
   }
 });
+
 
 router.get('/get/:code', authMiddleware, async (req, res) => {
   try {

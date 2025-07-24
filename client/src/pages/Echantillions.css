@@ -1,0 +1,165 @@
+.echantillions-container {
+  max-width: 600px;
+  margin: 40px auto;
+  background: #fff;
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(75,59,148,0.08);
+  position: relative;
+}
+
+.echantillions-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #4b3b94;
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+.echantillions-search {
+  width: 100%;
+  padding: 10px 14px;
+  margin-bottom: 18px;
+  border-radius: 8px;
+  border: 1.5px solid #b5a8d5;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.echantillions-search:focus {
+  border-color: #4b3b94;
+}
+
+.echantillions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.echantillions-item {
+  margin-bottom: 16px;
+  padding: 14px 16px;
+  background: #f7f8fc;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(75,59,148,0.04);
+  font-size: 1rem;
+}
+
+.echantillions-item strong {
+  color: #4b3b94;
+}
+
+.echantillions-add-btn {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  background: #4b3b94;
+  color: white;
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  font-size: 2.5rem;
+  border: none;
+  box-shadow: 0 4px 12px rgba(75,59,148,0.2);
+  cursor: pointer;
+  z-index: 1000;
+  transition: background 0.2s;
+}
+
+.echantillions-add-btn:hover {
+  background: #6c5ecf;
+}
+
+.echantillions-modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.echantillions-modal {
+  background: white;
+  padding: 28px;
+  border-radius: 12px;
+  min-width: 320px;
+  max-width: 380px;
+  box-shadow: 0 6px 24px rgba(75,59,148,0.15);
+  position: relative;
+}
+
+.echantillions-modal h2 {
+  font-size: 1.3rem;
+  color: #4b3b94;
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+.echantillions-modal-mode-btns {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.echantillions-modal-mode-btn {
+  flex: 1;
+  padding: 10px 0;
+  border-radius: 8px;
+  border: 1.5px solid #b5a8d5;
+  background: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border 0.2s, background 0.2s;
+}
+
+.echantillions-modal-mode-btn.active {
+  border: 2px solid #4b3b94;
+  background: #ede9ff;
+}
+
+.echantillions-modal-form input {
+  margin-bottom: 12px;
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1.5px solid #b5a8d5;
+  font-size: 1rem;
+  outline: none;
+  transition: border 0.2s;
+}
+
+.echantillions-modal-form input:focus {
+  border-color: #4b3b94;
+}
+
+.echantillions-modal-form button {
+  width: 100%;
+  padding: 12px;
+  background: #4b3b94;
+  color: white;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.echantillions-modal-form button:hover {
+  background: #6c5ecf;
+}
+
+.echantillions-modal-error {
+  color: crimson;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.echantillions-modal-success {
+  color: green;
+  margin-top: 10px;
+  text-align: center;
+}
