@@ -151,7 +151,7 @@ const Dashboard = () => {
               fetchCasiers(token);
             }}
           >
-            Rafraîchir
+            Refresh
           </button>
         </div>
 

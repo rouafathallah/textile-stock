@@ -1,5 +1,5 @@
 .echantillions-container {
-  max-width: 600px;
+  max-width: 800px;
   margin: 40px auto;
   background: #fff;
   padding: 24px;
@@ -17,7 +17,7 @@
 }
 
 .echantillions-search {
-  width: 100%;
+  width: 110vh;
   padding: 10px 14px;
   margin-bottom: 18px;
   border-radius: 8px;
@@ -35,19 +35,43 @@
   list-style: none;
   padding: 0;
   margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  justify-content: flex-start; /* Always start from the left */
+  max-width: 760px; /* fits two columns */
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .echantillions-item {
-  margin-bottom: 16px;
-  padding: 14px 16px;
-  background: #f7f8fc;
+  background: #fff;
   border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(75,59,148,0.04);
+  box-shadow: 0 2px 8px rgba(75,59,148,0.08);
+  padding: 12px 18px;
+  min-width: 320px;
+  max-width: 400px;
+  width: 23%; /* for 4 columns, but wider */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   font-size: 1rem;
+  transition: box-shadow 0.2s;
+}
+
+.echantillions-item:hover {
+  box-shadow: 0 6px 24px rgba(75,59,148,0.12);
+  background: #f7f8fc;
 }
 
 .echantillions-item strong {
   color: #4b3b94;
+}
+
+.echantillions-item button {
+  align-self: flex-end;
+  margin-top: 8px;
 }
 
 .echantillions-add-btn {
@@ -162,4 +186,22 @@
   color: green;
   margin-top: 10px;
   text-align: center;
+}
+
+.echantillions-info {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.echantillions-quantite {
+  font-weight: 700;
+  color: #4b3b94;
+  font-size: 1.05rem;
+  background: #f7f8fc;
+  border-radius: 6px;
+  padding: 4px 14px;
+  min-width: 80px;
+  text-align: right;
 }

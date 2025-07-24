@@ -146,7 +146,24 @@ router.post('/destock', async (req, res) => {
 router.get('/getall', authMiddleware, async (req, res) => {
   try {
     const echantillons = await Echantillon.find().populate('article');
-    res.status(200).json(echantillons);
+    const casiers = await Casier.find();
+
+    // Map échantillonId => totalQuantite
+    const quantiteMap = {};
+    casiers.forEach(casier => {
+      casier.contenus.forEach(item => {
+        const id = item.echantillon.toString();
+        quantiteMap[id] = (quantiteMap[id] || 0) + (item.quantite || 0);
+      });
+    });
+
+    // Add totalQuantite to each echantillon
+    const result = echantillons.map(e => ({
+      ...e.toObject(),
+      totalQuantite: quantiteMap[e._id.toString()] || 0
+    }));
+
+    res.status(200).json(result);
   } catch (err) {
     res.status(500).json({ message: 'Erreur lors de la récupération des échantillons', error: err.message });
   }

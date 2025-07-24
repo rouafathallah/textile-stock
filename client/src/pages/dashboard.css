@@ -98,7 +98,10 @@
 /* Search */
 .dashboard-search {
   margin-bottom: 25px;
-}
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;}
 
 .dashboard-search-input {
   width: 100%;

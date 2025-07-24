@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { Html5QrcodeScanner } from 'html5-qrcode';
-import './Echantillions.css';
+import './Echantillon.css';
 
 function Echantillions() {
   const [echantillons, setEchantillons] = useState([]);
@@ -16,6 +16,7 @@ function Echantillions() {
   const [quantite, setQuantite] = useState('');
   const [codeUnique, setCodeUnique] = useState('');
   const [success, setSuccess] = useState('');
+  const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
   const scannerRef = useRef(null);
 
@@ -119,9 +120,30 @@ function Echantillions() {
         ) : (
           filteredEchantillons.map(e => (
             <li key={e._id} className="echantillions-item">
-              <strong>Nom:</strong> {e.nom}<br />
-              <strong>Code Article:</strong> {e.article?.code_article || '-'}<br />
-              <strong>Libelle:</strong> {e.article?.libelle || '-'}
+              <div className="echantillions-info">
+                <div>
+                  <strong>Code Article:</strong> {e.article?.code_article || '-'}<br />
+                  <strong>Libelle:</strong> {e.article?.libelle || '-'}
+                </div>
+                <div className="echantillions-quantite">
+                  Quantité: {e.totalQuantite ?? 0}
+                </div>
+              </div>
+              <button
+                style={{
+                  marginTop: 8,
+                  padding: '6px 18px',
+                  borderRadius: 8,
+                  border: 'none',
+                  background: '#c0392b',
+                  color: 'white',
+                  fontWeight: 600,
+                  cursor: 'pointer'
+                }}
+                onClick={() => { /* TODO: implement destock logic */ }}
+              >
+                Destock
+              </button>
             </li>
           ))
         )}
@@ -139,6 +161,39 @@ function Echantillions() {
       >
         ＋
       </button>
+
+      {/* Floating menu for navigation */}
+      <div className="floating-menu" style={{ position: 'fixed', top: '20%', left: 20, zIndex: 1000 }}>
+        <button
+          className="floating-menu-btn"
+          aria-label="Open menu"
+          onClick={() => setMenuOpen(prev => !prev)}
+          type="button"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 24 24"
+            width="28"
+            height="28"
+          >
+            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+          </svg>
+        </button>
+        {menuOpen && (
+          <div className="floating-menu-dropdown" role="menu">
+            <button onClick={() => navigate('/dashboard/articles')} role="menuitem" type="button">
+              Articles
+            </button>
+            <button onClick={() => navigate('/dashboard')} role="menuitem" type="button">
+              Casiers
+            </button>
+            <button onClick={() => navigate('/dashboard/echantillions')} role="menuitem" type="button">
+              Échantillons
+            </button>
+          </div>
+        )}
+      </div>
 
       {/* Modal for adding echantillon */}
       {modalOpen && (
