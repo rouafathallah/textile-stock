@@ -37,17 +37,29 @@ router.post('/stock', async (req, res) => {
       return res.status(400).json({ message: 'Capacité maximale du casier atteinte (30).' });
     }
 
-    // Créer l'échantillon lié à l'article
-    const echantillon = await Echantillon.create({
-      nom: article.libelle,
-      article: article._id
-    });
+    // Chercher un échantillon existant pour cet article
+    let echantillon = await Echantillon.findOne({ article: article._id });
+    if (!echantillon) {
+      echantillon = await Echantillon.create({
+        nom: article.libelle,
+        article: article._id
+      });
+    }
 
-    // Ajouter au casier
-    casier.contenus.push({
-      echantillon: echantillon._id,
-      quantite: quantiteNumber
-    });
+    // Vérifier si le casier contient déjà cet échantillon
+    const contenuIndex = casier.contenus.findIndex(
+      c => c.echantillon.toString() === echantillon._id.toString()
+    );
+    if (contenuIndex !== -1) {
+      // Augmenter la quantité
+      casier.contenus[contenuIndex].quantite += quantiteNumber;
+    } else {
+      // Ajouter un nouvel item
+      casier.contenus.push({
+        echantillon: echantillon._id,
+        quantite: quantiteNumber
+      });
+    }
 
     await casier.save();
 
@@ -171,17 +183,29 @@ router.post('/stock-by-code', async (req, res) => {
       return res.status(400).json({ message: 'Capacité maximale du casier atteinte (30).' });
     }
 
-    // Créer l'échantillon lié à l'article
-    const echantillon = await Echantillon.create({
-      nom: article.libelle,
-      article: article._id
-    });
+    // Chercher un échantillon existant pour cet article
+    let echantillon = await Echantillon.findOne({ article: article._id });
+    if (!echantillon) {
+      echantillon = await Echantillon.create({
+        nom: article.libelle,
+        article: article._id
+      });
+    }
 
-    // Ajouter au casier
-    casier.contenus.push({
-      echantillon: echantillon._id,
-      quantite: quantiteNumber
-    });
+    // Vérifier si le casier contient déjà cet échantillon
+    const contenuIndex = casier.contenus.findIndex(
+      c => c.echantillon.toString() === echantillon._id.toString()
+    );
+    if (contenuIndex !== -1) {
+      // Augmenter la quantité
+      casier.contenus[contenuIndex].quantite += quantiteNumber;
+    } else {
+      // Ajouter un nouvel item
+      casier.contenus.push({
+        echantillon: echantillon._id,
+        quantite: quantiteNumber
+      });
+    }
 
     await casier.save();
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 import './dashboard.css';
 
@@ -13,6 +13,19 @@ const Dashboard = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const menuRef = useRef(null);
 
+  // Fetch casiers from API
+  const fetchCasiers = async (token) => {
+    try {
+      const res = await axios.get('http://localhost:5000/casiers/get', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setCasiers(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // Initial load and refresh on navigation
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (!token) return navigate('/login');
@@ -32,27 +45,22 @@ const Dashboard = () => {
     }
   }, [navigate]);
 
-  // Fetch casiers from API
-  const fetchCasiers = async (token) => {
-    try {
-      const res = await axios.get('http://localhost:5000/casiers/get', {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      setCasiers(res.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
   // Filter casiers by search input (starts with)
-  const filteredCasiers = casiers.filter((casier) =>
-    casier.code_unique.startsWith(search)
-  );
+  const filteredCasiers = Array.isArray(casiers)
+    ? casiers.filter((casier) =>
+        casier.code_unique.toLowerCase().startsWith(search.toLowerCase())
+      )
+    : [];
 
   // Navigation handler for floating menu
   const handleNavigate = (path) => {
     setMenuOpen(false);
-    if (path === '/dashboard') return; // Stay on same page for casiers
+    if (path === '/dashboard') {
+      // Refresh casiers when returning to dashboard
+      const token = localStorage.getItem('token');
+      fetchCasiers(token);
+      return;
+    }
     navigate(path);
   };
 
@@ -127,35 +135,53 @@ const Dashboard = () => {
             className="dashboard-search-input"
             aria-label="Search casier by code"
           />
+          <button
+            style={{
+              marginLeft: 8,
+              padding: '6px 16px',
+              borderRadius: 8,
+              border: 'none',
+              background: '#4b3b94',
+              color: 'white',
+              fontWeight: 600,
+              cursor: 'pointer'
+            }}
+            onClick={() => {
+              const token = localStorage.getItem('token');
+              fetchCasiers(token);
+            }}
+          >
+            Rafraîchir
+          </button>
         </div>
 
         <h2 className="dashboard-subtitle">Tous les Casiers</h2>
         <div className="dashboard-casiers-list">
           {filteredCasiers.length === 0 ? (
-            <p className="dashboard-no-results">Pas de casier trouvé .</p>
+            <p className="dashboard-no-results">Pas de casier trouvé.</p>
           ) : (
             filteredCasiers.map((casier) => (
-<div
-  key={casier.code_unique}
-  className="dashboard-casier-card"
-  onClick={() => navigate(`/dashboard/casier/${casier.code_unique}`)}
-  style={{ cursor: 'pointer' }}
->
-  <div className="dashboard-casier-code">{casier.code_unique}</div>
-  <div className="dashboard-casier-espace">
-    Espace: {Array.isArray(casier.contenus)
-      ? casier.contenus.reduce((sum, item) => sum + (item.quantite || 0), 0)
-      : 0} / {MAX_SLOTS}
-  </div>
-  <div
-    className={
-      'dashboard-casier-type ' +
-      (casier.type === 'OUT' ? 'type-out' : 'type-in')
-    }
-  >
-    {casier.type}
-  </div>
-</div>
+              <div
+                key={casier.code_unique}
+                className="dashboard-casier-card"
+                onClick={() => navigate(`/dashboard/casier/${casier.code_unique}`)}
+                style={{ cursor: 'pointer' }}
+              >
+                <div className="dashboard-casier-code">{casier.code_unique}</div>
+                <div className="dashboard-casier-espace">
+                  Espace: {Array.isArray(casier.contenus)
+                    ? casier.contenus.reduce((sum, item) => sum + (item.quantite || 0), 0)
+                    : 0} / {MAX_SLOTS}
+                </div>
+                <div
+                  className={
+                    'dashboard-casier-type ' +
+                    (casier.type === 'OUT' ? 'type-out' : 'type-in')
+                  }
+                >
+                  {casier.type}
+                </div>
+              </div>
             ))
           )}
         </div>

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Casier = require('../models/casier');
+const Echantillon = require('../models/echantillon');
 const { authMiddleware, adminOnly } = require('../middleware/auth');
 
 router.post('/generer-auto', authMiddleware, adminOnly, async (req, res) => {
@@ -142,6 +143,26 @@ router.get('/get/:code', authMiddleware, async (req, res) => {
     }
 
     res.status(200).json(casier);
+  } catch (err) {
+    res.status(500).json({ message: 'Erreur serveur.', error: err.message });
+  }
+});
+
+router.post('/empty/:code_unique', async (req, res) => {
+  try {
+    const casier = await Casier.findOne({ code_unique: req.params.code_unique });
+    if (!casier) return res.status(404).json({ message: 'Casier non trouvé.' });
+
+    // Remove associated échantillons from DB
+    const echantillonIds = casier.contenus.map(item => item.echantillon);
+    if (echantillonIds.length > 0) {
+      await Echantillon.deleteMany({ _id: { $in: echantillonIds } });
+    }
+
+    casier.contenus = [];
+    await casier.save();
+
+    res.json({ message: 'Casier vidé et échantillons supprimés avec succès.' });
   } catch (err) {
     res.status(500).json({ message: 'Erreur serveur.', error: err.message });
   }

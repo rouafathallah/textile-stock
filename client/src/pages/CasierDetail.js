@@ -34,6 +34,23 @@ const CasierDetail = () => {
     fetchCasier();
   }, [code, navigate]);
 
+  const handleEmptyCasier = async () => {
+    const token = localStorage.getItem('token');
+    if (!window.confirm('Êtes-vous sûr de vouloir vider ce casier ?')) return;
+    try {
+      await axios.post(`http://localhost:5000/casiers/empty/${casier.code_unique}`, {}, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      // Refresh casier info
+      const res = await axios.get(`http://localhost:5000/casiers/get/${casier.code_unique}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setCasier(res.data);
+    } catch (err) {
+      alert('Erreur lors du vidage du casier');
+    }
+  };
+
   if (loading) return <p>Loading casier info...</p>;
   if (error) return <p>Error: {error}</p>;
   if (!casier) return <p>Pas de casier trouvé</p>;
@@ -52,9 +69,30 @@ const CasierDetail = () => {
         <p><strong>Étage:</strong> {casier.code_etage}</p>
         <p><strong>Casier:</strong> {casier.code_casier}</p>
         <p>
-          <strong>Stockage:</strong> {casier.contenus?.length || 0} / {MAX_SLOTS}
+          <strong>Stockage:</strong> {Array.isArray(casier.contenus)
+            ? casier.contenus.reduce((sum, item) => sum + (item.quantite || 0), 0)
+            : 0} / {MAX_SLOTS}
+        </p>
+        <p>
+          <strong>Types d'échantillon:</strong> {Array.isArray(casier.contenus) ? casier.contenus.length : 0}
         </p>
       </div>
+
+      <button
+        style={{
+          margin: '16px 0',
+          padding: '10px 24px',
+          background: '#c0392b',
+          color: 'white',
+          border: 'none',
+          borderRadius: 8,
+          fontWeight: 600,
+          cursor: 'pointer'
+        }}
+        onClick={handleEmptyCasier}
+      >
+        Vider le casier
+      </button>
 
       <h2>Échantillons stockés</h2>
       {casier.contenus && casier.contenus.length > 0 ? (
