@@ -98,11 +98,20 @@ const CasierDetail = () => {
       {casier.contenus && casier.contenus.length > 0 ? (
         <ul className="echantillons-list">
           {casier.contenus.map((contenu, index) => (
-            <li key={contenu._id || index} className="echantillon-item">
-              <p><strong>Nom échantillon:</strong> {contenu.echantillon?.nom || 'N/A'}</p>
-              <p><strong>Code article:</strong> {contenu.echantillon?.article?.code_article || 'N/A'}</p>
-              <p><strong>Quantité:</strong> {contenu.quantite}</p>
-            </li>
+  <li
+    key={contenu._id || index}
+    className="echantillon-item"
+    onClick={() => {
+      if (contenu.echantillon?._id) {
+    navigate(`/dashboard/echantillon/${contenu.echantillon._id}`);
+      }
+    }}
+    style={{ cursor: 'pointer' }}
+  >
+    <p><strong>Nom échantillon:</strong> {contenu.echantillon?.nom || 'N/A'}</p>
+    <p><strong>Code article:</strong> {contenu.echantillon?.article?.code_article || 'N/A'}</p>
+    <p><strong>Quantité:</strong> {contenu.quantite}</p>
+  </li>
           ))}
         </ul>
       ) : (

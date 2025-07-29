@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import './nav.css'; 
+import logoutIcon from '../assets/out.png';
 const Navbar = ({ onLogout }) => {
   const navigate = useNavigate();
 
@@ -27,14 +28,25 @@ const Navbar = ({ onLogout }) => {
             <Link to="/signup" className="nav-link nav-link-auth nav-signup">Sign Up</Link>
           </>
         ) : (
-          <button
-            className="nav-btn-logout"
-            onClick={handleLogout}
-            aria-label="Logout"
-            type="button"
-          >
-            Logout
-          </button>
+<button
+  className="nav-btn-logout"
+  onClick={handleLogout}
+  aria-label="Logout"
+  type="button"
+  title="Logout"
+  style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+>
+  <img
+    src={logoutIcon}
+    alt="Logout"
+    width={36}
+    height={38}
+    style={{ filter: 'brightness(0) invert(1)' }} // makes icon white-ish
+  />
+</button>
+
+
+
         )}
       </div>
     </nav>

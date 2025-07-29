@@ -29,7 +29,7 @@
   margin: 24px 0;
   text-align: center;
   border: 2px solid #4b4bc1;
-  padding: 12px;
+  padding: 27px 80px;
   border-radius: 8px;
   display: inline-block;
   background-color: #f9f9ff;
@@ -45,6 +45,7 @@
 
 /* Print button */
 .print-btn {
+  
   display: inline-block;
   background-color: #4b4bc1;
   color: white;
@@ -59,4 +60,11 @@
 
 .print-btn:hover {
   background-color: #3a3a9a;
+}
+.button-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 16px;
+  flex-wrap: wrap;
 }

@@ -119,15 +119,28 @@ function Echantillions() {
           <p>Aucun échantillon trouvé.</p>
         ) : (
           filteredEchantillons.map(e => (
-            <li key={e._id} className="echantillions-item">
+            <li
+              key={e._id}
+              className="echantillions-item"
+              style={{ cursor: 'pointer' }}
+              onClick={() => navigate(`/dashboard/echantillon/${e._id}`)}
+            >
               <div className="echantillions-info">
                 <div>
                   <strong>Code Article:</strong> {e.article?.code_article || '-'}<br />
                   <strong>Libelle:</strong> {e.article?.libelle || '-'}
                 </div>
-                <div className="echantillions-quantite">
-                  Quantité: {e.totalQuantite ?? 0}
-                </div>
+<div className="echantillions-quantite">
+  Quantité:{' '}
+  {e?.stocks && Array.isArray(e.stocks)
+  ? e.stocks
+      .filter(s => s?.casier?.type !== 'DST')
+      .reduce((acc, s) => acc + (s?.quantite || 0), 0)
+  : 0}
+</div>
+
+
+
               </div>
               <button
                 style={{
@@ -140,7 +153,7 @@ function Echantillions() {
                   fontWeight: 600,
                   cursor: 'pointer'
                 }}
-                onClick={() => { /* TODO: implement destock logic */ }}
+                onClick={e => e.stopPropagation()}
               >
                 Destock
               </button>

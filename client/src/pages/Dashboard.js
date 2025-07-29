@@ -167,8 +167,9 @@ const Dashboard = () => {
                 onClick={() => navigate(`/dashboard/casier/${casier.code_unique}`)}
                 style={{ cursor: 'pointer' }}
               >
-                <div className="dashboard-casier-code">{casier.code_unique}</div>
-                <div className="dashboard-casier-espace">
+<div className="dashboard-casier-code">
+  {casier.type === 'DST' ? 'Déstockage' : casier.code_unique}
+</div>                <div className="dashboard-casier-espace">
                   Espace: {Array.isArray(casier.contenus)
                     ? casier.contenus.reduce((sum, item) => sum + (item.quantite || 0), 0)
                     : 0} / {MAX_SLOTS}
@@ -176,7 +177,7 @@ const Dashboard = () => {
                 <div
                   className={
                     'dashboard-casier-type ' +
-                    (casier.type === 'OUT' ? 'type-out' : 'type-in')
+                    (casier.type === 'DST' ? 'type-out' : 'type-in')
                   }
                 >
                   {casier.type}

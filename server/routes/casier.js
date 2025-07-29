@@ -70,7 +70,6 @@ router.post('/generer-auto', authMiddleware, adminOnly, async (req, res) => {
     res.status(500).json({ message: 'Erreur serveur.', error: err.message });
   }
 });
-
 router.post('/init-destockage', authMiddleware, adminOnly, async (req, res) => {
   try {
     const alreadyExists = await Casier.findOne({ type: 'DST' });
@@ -94,7 +93,6 @@ router.post('/init-destockage', authMiddleware, adminOnly, async (req, res) => {
     res.status(500).json({ message: 'Erreur serveur.', error: err.message });
   }
 });
-
 router.post('/vider/:code_unique', authMiddleware, adminOnly, async (req, res) => {
   try {
     const casier = await Casier.findOne({ code_unique: req.params.code_unique });
@@ -115,7 +113,6 @@ router.post('/vider/:code_unique', authMiddleware, adminOnly, async (req, res) =
     res.status(500).json({ message: 'Erreur serveur.', error: err.message });
   }
 });
-
 
 router.get('/get', authMiddleware, async (req, res) => {
   try {
@@ -165,6 +162,85 @@ router.post('/empty/:code_unique', async (req, res) => {
     res.json({ message: 'Casier vidé et échantillons supprimés avec succès.' });
   } catch (err) {
     res.status(500).json({ message: 'Erreur serveur.', error: err.message });
+  }
+});
+router.delete('/remove/:code_unique', authMiddleware, adminOnly, async (req, res) => {
+  try {
+    const { code_unique } = req.params;
+
+    const casier = await Casier.findOne({ code_unique });
+    if (!casier) {
+      return res.status(404).json({ message: 'Casier non trouvé.' });
+    }
+
+    await casier.deleteOne();
+
+    res.status(200).json({ message: 'Casier supprimé avec succès.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Erreur serveur lors de la suppression du casier.', error: err.message });
+  }
+});
+
+// POST /casiers/generate
+router.post('/generate', authMiddleware, adminOnly, async (req, res) => {
+  try {
+    const { nbrRayons, nbrEtages, nbrCasiers, startRayon, startEtage, startCasier } = req.body;
+
+    if (
+      [nbrRayons, nbrEtages, nbrCasiers, startRayon, startEtage, startCasier].some(
+        (v) => v === undefined || isNaN(v)
+      )
+    ) {
+      return res.status(400).json({ message: 'Tous les champs sont requis et doivent être numériques.' });
+    }
+
+    const newCasiers = [];
+
+    for (let r = 0; r < nbrRayons; r++) {
+      const rayonNum = (startRayon + r).toString().padStart(2, '0');
+
+      for (let e = 0; e < nbrEtages; e++) {
+        const etageNum = (startEtage + e).toString().padStart(2, '0');
+
+        for (let c = 0; c < nbrCasiers; c++) {
+          const casierNum = (startCasier + c).toString().padStart(2, '0');
+
+          const code_unique = rayonNum + etageNum + casierNum;
+
+          newCasiers.push({
+            code_rayon: rayonNum,
+            code_etage: etageNum,
+            code_casier: casierNum,
+            code_unique,
+            contenus: [],
+            type: 'STK',
+          });
+        }
+      }
+    }
+
+    await Casier.insertMany(newCasiers);
+
+    res.status(201).json({
+      message: '✅ Casiers générés avec succès.',
+      total: newCasiers.length,
+      exemples: newCasiers.slice(0, 5),
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Erreur serveur.', error: err.message });
+  }
+});
+
+router.delete('/remove-all-stk', authMiddleware, adminOnly, async (req, res) => {
+  try {
+    const result = await Casier.deleteMany({ type: 'STK' });
+    res.status(200).json({ message: `✅ ${result.deletedCount} casier(s) de type STK supprimé(s) avec succès.` });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Erreur serveur lors de la suppression des casiers STK.', error: err.message });
   }
 });
 
